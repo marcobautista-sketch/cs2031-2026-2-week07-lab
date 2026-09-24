@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: flyaway-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-flyaway}
+      POSTGRES_USER: ${DB_USER:-flyaway}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-flyaway}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - flyaway-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-flyaway} -d ${DB_NAME:-flyaway}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  flyaway-data:
